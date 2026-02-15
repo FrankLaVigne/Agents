@@ -1,10 +1,11 @@
-# Sample Agent + MCP Server (+ SDK + A2A)
+# Sample Agent + MCP Server (+ SDK + A2A + ACP)
 
-This repository now includes three tracks you can test:
+This repository now includes four tracks you can test:
 
 1. Raw MCP (no external SDK required): a hand-rolled MCP-style server/client.
 2. MCP Python SDK: a server/client implemented with the official `mcp` package.
 3. A2A: a minimal Agent2Agent server/client using `a2a-sdk`.
+4. ACP: a minimal Agent Communication Protocol server/client using `acp-sdk`.
 
 ## What This Project Does
 
@@ -29,12 +30,14 @@ The MCP server includes these tools:
 
 ## Files
 
-- `mcp_server.py`: raw MCP-style stdio server (`initialize`, `tools/list`, `tools/call`).
-- `sample_agent.py`: raw MCP-style agent/client with interactive chat loop.
-- `sdk_mcp_server.py`: MCP server built with official Python MCP SDK (`FastMCP`).
-- `sdk_agent.py`: MCP agent/client built with official Python MCP SDK.
-- `a2a_server.py`: A2A server sample (HTTP) using `a2a-sdk`.
-- `a2a_client.py`: A2A client sample sending a message to `a2a_server.py`.
+- `mcp/raw/mcp_server.py`: raw MCP-style stdio server (`initialize`, `tools/list`, `tools/call`).
+- `mcp/raw/sample_agent.py`: raw MCP-style agent/client with interactive chat loop.
+- `mcp/sdk/sdk_mcp_server.py`: MCP server built with official Python MCP SDK (`FastMCP`).
+- `mcp/sdk/sdk_agent.py`: MCP agent/client built with official Python MCP SDK.
+- `a2a/a2a_server.py`: A2A server sample (HTTP) using `a2a-sdk`.
+- `a2a/a2a_client.py`: A2A client sample sending a message to `a2a/a2a_server.py`.
+- `acp/acp_server.py`: ACP server sample (HTTP) using `acp-sdk`.
+- `acp/acp_client.py`: ACP client sample sending a message to `acp/acp_server.py`.
 
 ## Requirements
 
@@ -45,11 +48,12 @@ Optional frameworks:
 
 - For MCP SDK examples: `pip install "mcp[cli]"`
 - For A2A examples: `pip install a2a-sdk uvicorn httpx`
+- For ACP examples: `pip install acp-sdk uvicorn httpx`
 
 ## 1) Run Raw MCP Sample (No Extra Dependencies)
 
 ```bash
-python3 sample_agent.py
+python3 mcp/raw/sample_agent.py
 ```
 
 Or:
@@ -60,7 +64,7 @@ make mcp
 
 What happens:
 
-1. Agent starts `mcp_server.py`.
+1. Agent starts `mcp/raw/mcp_server.py`.
 2. Agent sends `initialize`.
 3. Agent lists tools.
 4. Agent runs one sample `echo` call.
@@ -92,7 +96,7 @@ make install-mcp-sdk
 Run:
 
 ```bash
-python3 sdk_agent.py
+python3 mcp/sdk/sdk_agent.py
 ```
 
 Or:
@@ -103,7 +107,7 @@ make mcp-sdk
 
 What happens:
 
-1. `sdk_agent.py` launches `sdk_mcp_server.py` via stdio transport.
+1. `mcp/sdk/sdk_agent.py` launches `mcp/sdk/sdk_mcp_server.py` via stdio transport.
 2. Client initializes session.
 3. Client lists tools.
 4. Client calls `echo` and `search_files`.
@@ -125,7 +129,7 @@ make install-a2a
 Start A2A server (terminal 1):
 
 ```bash
-python3 a2a_server.py
+python3 a2a/a2a_server.py
 ```
 
 Or:
@@ -137,7 +141,7 @@ make a2a-server
 Call with A2A client (terminal 2):
 
 ```bash
-python3 a2a_client.py
+python3 a2a/a2a_client.py
 ```
 
 Or:
@@ -160,8 +164,54 @@ What happens:
 2. Client sends a message.
 3. Server responds with an echoed artifact payload.
 
+## 4) Run ACP Sample
+
+Install dependencies:
+
+```bash
+pip install acp-sdk uvicorn httpx
+```
+
+Or:
+
+```bash
+make install-acp
+```
+
+Start ACP server (terminal 1):
+
+```bash
+python3 acp/acp_server.py
+```
+
+Or:
+
+```bash
+make acp-server
+```
+
+Call with ACP client (terminal 2):
+
+```bash
+python3 acp/acp_client.py
+```
+
+Or:
+
+```bash
+make acp-client
+```
+
+You can also use:
+
+```bash
+make acp
+```
+
+This is an alias for `make acp-server`.
+
 ## Notes
 
 - Raw MCP scripts are fully self-contained and already verified locally in this repo.
-- SDK/A2A scripts include dependency checks and print install instructions if packages are missing.
+- SDK/A2A/ACP scripts include dependency checks and print install instructions if packages are missing.
 - `search_files` intentionally skips non-UTF8 files and hidden dotfiles, and limits output size.

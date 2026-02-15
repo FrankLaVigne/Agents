@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 
@@ -115,7 +116,8 @@ def run_chat_loop(client: MCPClient) -> None:
 
 
 def main() -> int:
-    client = MCPClient([sys.executable, "mcp_server.py"])
+    server_script = Path(__file__).with_name("mcp_server.py")
+    client = MCPClient([sys.executable, str(server_script)])
 
     try:
         init = client.call(

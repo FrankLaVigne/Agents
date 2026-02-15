@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import sys
+from pathlib import Path
 
 
 async def run() -> None:
@@ -18,7 +19,8 @@ async def run() -> None:
             f"Details: {exc}"
         ) from exc
 
-    params = StdioServerParameters(command=sys.executable, args=["sdk_mcp_server.py"])
+    server_script = Path(__file__).with_name("sdk_mcp_server.py")
+    params = StdioServerParameters(command=sys.executable, args=[str(server_script)])
 
     async with stdio_client(params) as (read_stream, write_stream):
         async with ClientSession(read_stream, write_stream) as session:

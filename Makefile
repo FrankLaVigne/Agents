@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help mcp mcp-sdk a2a a2a-server a2a-client install-mcp-sdk install-a2a
+.PHONY: help mcp mcp-sdk a2a a2a-server a2a-client acp acp-server acp-client install-mcp-sdk install-a2a install-acp
 
 help:
 	@echo "Targets:"
@@ -11,23 +11,38 @@ help:
 	@echo "  make a2a-server    - Start A2A server on localhost:9999"
 	@echo "  make a2a-client    - Run A2A client against localhost:9999"
 	@echo "  make a2a           - Alias for make a2a-server"
+	@echo "  make install-acp   - Install ACP sample dependencies"
+	@echo "  make acp-server    - Start ACP server on localhost:8001"
+	@echo "  make acp-client    - Run ACP client against localhost:8001"
+	@echo "  make acp           - Alias for make acp-server"
 
 mcp:
-	$(PYTHON) sample_agent.py
+	$(PYTHON) mcp/raw/sample_agent.py
 
 install-mcp-sdk:
 	$(PYTHON) -m pip install "mcp[cli]"
 
 mcp-sdk:
-	$(PYTHON) sdk_agent.py
+	$(PYTHON) mcp/sdk/sdk_agent.py
 
 install-a2a:
 	$(PYTHON) -m pip install a2a-sdk uvicorn httpx
 
 a2a-server:
-	$(PYTHON) a2a_server.py
+	$(PYTHON) a2a/a2a_server.py
 
 a2a-client:
-	$(PYTHON) a2a_client.py
+	$(PYTHON) a2a/a2a_client.py
 
 a2a: a2a-server
+
+install-acp:
+	$(PYTHON) -m pip install acp-sdk uvicorn httpx
+
+acp-server:
+	$(PYTHON) acp/acp_server.py
+
+acp-client:
+	$(PYTHON) acp/acp_client.py
+
+acp: acp-server
